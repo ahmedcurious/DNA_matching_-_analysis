@@ -4,6 +4,9 @@ import numpy as np
 from math import prod
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
+import tempfile
+import shutil
+import os
 
 app = FastAPI()
 
@@ -91,9 +94,10 @@ async def dna_matching(target_sequence: UploadFile = File(...), excel_file: Uplo
         # Use provided Excel file or the preloaded Excel file
         if excel_file:
             excel_data = await excel_file.read()
-            excel_file_path = "/tmp/temp_excel_file.xlsx"
-            with open(excel_file_path, "wb") as f:
-                f.write(excel_data)
+            # Use tempfile to create a temporary file in the correct directory
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
+                temp_file.write(excel_data)
+                excel_file_path = temp_file.name
         else:
             excel_file_path = EXCEL_FILE_PATH
 
@@ -110,6 +114,10 @@ async def dna_matching(target_sequence: UploadFile = File(...), excel_file: Uplo
         kinship_lr = calculate_kinship_lr(shared_probs, unrelated_probs)
         sibling_probs = [0.25, 0.25, 0.5]  # Example sibling allele probabilities
         fsi = calculate_sibling_index(sibling_probs)
+
+        # Clean up temporary file
+        if excel_file:
+            os.remove(excel_file_path)
 
         # Combine results
         return {
