@@ -73,9 +73,8 @@ function App() {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        opacity: 0.8,
+        opacity: 1,
         color: 'white',
-        padding: '4rem',
         overflow: 'hidden', // Hide scrollbars
         maxWidth: '100%',   // Set max-width to 100%
       }}
@@ -108,7 +107,7 @@ function App() {
           onChange={handleFileChange}
           variant="outlined"
           fullWidth
-          style={{
+          sx={{
             backgroundColor: 'white',
             borderRadius: '4px',
             input: { color: 'black' },
@@ -133,7 +132,7 @@ function App() {
           onChange={handleExcelFileChange}
           variant="outlined"
           fullWidth
-          style={{
+          sx={{
             backgroundColor: 'white',
             borderRadius: '4px',
             input: { color: 'black' },
@@ -155,6 +154,7 @@ function App() {
         disabled={mutation.isLoading}
         style={{
           marginTop: '1rem',
+          width: '400px'
         }}
       >
         {mutation.isLoading ? <CircularProgress size={24} color="inherit" /> : 'Submit'}
